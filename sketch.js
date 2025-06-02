@@ -1,3 +1,13 @@
+/*
+----- Coding Tutorial by Patt Vira ----- 
+Name: Interactive Bridge w Bouncing Balls (matter.js + ml5.js)
+Video Tutorial: https://youtu.be/K7b5MEhPCuo
+
+Connect with Patt: @pattvira
+https://www.pattvira.com/
+----------------------------------------
+*/
+
 // ml5.js 
 let handPose;
 let video;
