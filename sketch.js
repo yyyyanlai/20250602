@@ -26,9 +26,12 @@ let colorPalette = ["#abcd5e", "#14976b", "#2b67af", "#62b6de", "#f589a3", "#ef5
 
 function preload() {
   // Load the handPose model
-  handPose = ml5.handPose({maxHands: 1, flipped: true});
+  handPose = ml5.handPose({maxHands: 1, flipped: true}, modelLoaded);
 }
 
+function modelLoaded() {
+  console.log("HandPose model loaded successfully!");
+}
 
 function setup() {
   createCanvas(640, 480);
@@ -36,10 +39,15 @@ function setup() {
   video = createCapture(VIDEO, {flipped: true});
   video.size(640, 480);
   video.hide();
-  // start detecting hands from the webcam video
+
+  // Check if the webcam video is loaded
+  video.elt.onloadeddata = () => {
+    console.log("Webcam video loaded successfully!");
+  };
+
+  // Start detecting hands from the webcam video
   handPose.detectStart(video, gotHands);
-  
-  
+
   engine = Engine.create();
   bridge = new Bridge(num, radius, length);
 }
@@ -49,25 +57,24 @@ function draw() {
   Engine.update(engine);
   strokeWeight(2);
   stroke(0);
-  
+
   // Draw the webcam video
   image(video, 0, 0, width, height);
-  
+
   if (random() < 0.1) {
     circles.push(new Circle());
   }
-  
-  for (let i=circles.length-1; i>=0; i--) {
+
+  for (let i = circles.length - 1; i >= 0; i--) {
     circles[i].checkDone();
     circles[i].display();
-    
+
     if (circles[i].done) {
       circles[i].removeCircle();
       circles.splice(i, 1);
     }
-    
   }
-  
+
   if (hands.length > 0) {
     let thumb = hands[0].keypoints[THUMB_TIP];
     let index = hands[0].keypoints[INDEX_FINGER_TIP];
@@ -75,19 +82,18 @@ function draw() {
     noStroke();
     circle(thumb.x, thumb.y, 10);
     circle(index.x, index.y, 10);
-    
+
     bridge.bodies[0].position.x = thumb.x;
     bridge.bodies[0].position.y = thumb.y;
-    bridge.bodies[bridge.bodies.length-1].position.x = index.x;
-    bridge.bodies[bridge.bodies.length-1].position.y = index.y;
+    bridge.bodies[bridge.bodies.length - 1].position.x = index.x;
+    bridge.bodies[bridge.bodies.length - 1].position.y = index.y;
     bridge.display();
   }
-  
-  
 }
 
 // Callback function for when handPose outputs data
 function gotHands(results) {
-  // save the output to the hands variable
+  // Save the output to the hands variable
   hands = results;
+  console.log("Hand detection results:", hands);
 }
