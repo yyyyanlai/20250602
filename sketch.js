@@ -29,16 +29,13 @@ function preload() {
   handPose = ml5.handPose({maxHands: 1, flipped: true});
 }
 
-
 function setup() {
   createCanvas(640, 480);
-  // Create the webcam video and hide it
-  video = createCapture(VIDEO, {flipped: true});
-  video.size(640, 480);
-  video.hide();
+  video = createCapture(VIDEO); // 初始化攝影機
+  video.size(640, 480);         // 設定攝影機大小
+  video.hide();                 // 隱藏攝影機的預設輸出
   // start detecting hands from the webcam video
   handPose.detectStart(video, gotHands);
-  
   
   engine = Engine.create();
   bridge = new Bridge(num, radius, length);
@@ -51,7 +48,7 @@ function draw() {
   stroke(0);
   
   // Draw the webcam video
-  image(video, 0, 0, width, height);
+  image(video, 0, 0, width, height); // 將攝影機畫面顯示在畫布上
   
   if (random() < 0.1) {
     circles.push(new Circle());
