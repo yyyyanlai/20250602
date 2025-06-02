@@ -18,6 +18,11 @@ function setup() {
   video.size(640, 480);         // 設定攝影機大小
   video.hide();                 // 隱藏攝影機的預設輸出
 
+  // 確保攝影機成功啟動
+  video.elt.onloadeddata = () => {
+    console.log("Webcam video loaded successfully!");
+  };
+
   // 開始偵測手勢
   handPose.on("predict", gotHands);
 }
@@ -43,4 +48,5 @@ function draw() {
 
 function gotHands(results) {
   hands = results; // 儲存手勢資料
+  console.log("Hand detection results:", hands);
 }
