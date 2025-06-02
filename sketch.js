@@ -26,7 +26,11 @@ let colorPalette = ["#abcd5e", "#14976b", "#2b67af", "#62b6de", "#f589a3", "#ef5
 
 function preload() {
   // Load the handPose model
-  handPose = ml5.handPose({maxHands: 1, flipped: true});
+  handPose = ml5.handPose({maxHands: 1, flipped: true}, modelLoaded);
+}
+
+function modelLoaded() {
+  console.log("HandPose model loaded successfully!");
 }
 
 function setup() {
@@ -34,6 +38,12 @@ function setup() {
   video = createCapture(VIDEO); // 初始化攝影機
   video.size(640, 480);         // 設定攝影機大小
   video.hide();                 // 隱藏攝影機的預設輸出
+  
+  // 確保攝影機成功啟動
+  video.elt.onloadeddata = () => {
+    console.log("Webcam video loaded successfully!");
+  };
+
   // start detecting hands from the webcam video
   handPose.detectStart(video, gotHands);
   
@@ -79,12 +89,10 @@ function draw() {
     bridge.bodies[bridge.bodies.length-1].position.y = index.y;
     bridge.display();
   }
-  
-  
 }
 
-// Callback function for when handPose outputs data
 function gotHands(results) {
   // save the output to the hands variable
   hands = results;
+  console.log("Hand detection results:", hands);
 }
